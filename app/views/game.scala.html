@@ -33,7 +33,11 @@
             <th>Status</th>
         }
         </tr>
-        <tr><td>Bank</td><td><br/></td><td>@if(game.state == Game.State.Done) { @game.bank.totalPoints }</td><td><br/></td><td>
+        <tr><td>Bank</td><td><br/></td><td>@if(game.state == Game.State.Done) {
+            @if(game.bank.totalPoints > 21) {
+                <span style="color: red; ">@game.bank.totalPoints</span>
+            } else { @game.bank.totalPoints }
+        }</td><td><br/></td><td>
             @if(game.state == Game.State.Done) {
                 @for(c <- game.bank.cards) { @card(c) }
             } else {
@@ -46,7 +50,11 @@
         </tr>
     @for(id <- 0 until game.numberPlayers) {
         @defining(game.getPlayer(id)) { player: Player =>
-            <tr><td>@player.name</td><td>@player.bet.getOrElse("-")</td><td>@player.totalPoints</td><td>
+            <tr><td>@player.name</td><td>@player.bet.getOrElse("-")</td><td>
+                @if(player.totalPoints > 21) {
+                    <span style="color: red; ">@player.totalPoints</span>
+                } else { @player.totalPoints }
+            </td><td>
             @if(game.state == Game.State.Betting && player.bet.isEmpty) {
                 <form action="/bet">
                     <input type="hidden", name="gameId" value="@gameId">
