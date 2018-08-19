@@ -1,0 +1,5 @@
+@import twentyone.utils.deck.Card
+@import twentyone.utils.deck.CardSuit
+@import twentyone.utils.deck.CardNumber
+@(card: Card)
+<img src="@routes.Assets.versioned(s"images/cards/${card.imgFileName}")" height="100">
