@@ -1,0 +1,20 @@
+@import twentyone.utils.Game
+@(games: Map[Int, Game])
+
+@main("Twenty One") {
+
+    <h1>Twenty One</h1>
+
+    <h3>Games</h3>
+
+    @if(games.isEmpty) {
+        <b>No game yet</b>
+    } else {
+        <table>
+            <tr><th>ID</th><th>State</th><th>Players</th></tr>
+            @for((gameId, game) <- games) {
+                <td>@gameId</td><td>@game.state</td><td>@game.numberPlayers</td>
+            }
+        </table>
+    }
+}
