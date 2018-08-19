@@ -2,7 +2,7 @@ name := "Twenty-One"
  
 version := "1.0" 
       
-lazy val yakshop = (project in file(".")).enablePlugins(PlayScala)
+lazy val TwentyOne = (project in file(".")).enablePlugins(PlayScala)
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
       
