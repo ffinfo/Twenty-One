@@ -28,12 +28,14 @@
     <br>
 
     <table>
-        <tr><th>Name</th><th>Bet</th><th>Points</th><th>Actions<th><th>Cards</th>
+        <tr><th>Name</th><th>Bet</th><th>Points</th><th>Actions</th><th>Cards</th>
         @if(game.state == Game.State.Done) {
             <th></th>
         }
         </tr>
-        <tr><td>Bank</td><td></td><td>@game.bank.totalPoints</td><td></td><td>@game.bank.cards</td>
+        <tr><td>Bank</td><td><br/></td><td>@game.bank.totalPoints</td><td><br/></td><td>
+        @for(c <- game.bank.cards) { @card(c) }
+        </td>
         @if(game.state == Game.State.Done) {
             <td></td>
         }
@@ -82,7 +84,7 @@
                 </form>
                 }
             }
-        </td><td>@player.cards</td>
+        </td><td>@for(c <- player.cards) { @card(c) }</td>
         <td>
         @if(game.state == Game.State.Done) {
             @game.result(id)
