@@ -4,4 +4,4 @@ scala:
   - 2.11.11
 
 script:
-  - sbt clean test
+  - sbt clean coverage test coverageReport coverageAggregate codacyCoverage
