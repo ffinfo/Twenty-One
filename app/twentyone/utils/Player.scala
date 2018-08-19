@@ -45,7 +45,10 @@ case class Player(name: String,
     */
   def addSplitCard(card: Card): Player = {
     splitCards match {
-      case Some(s) => this.copy(splitCards = Some(card :: s))
+      case Some(s) =>
+        val p = this.copy(splitCards = Some(card :: s))
+        if (p.totalSplitPoints.getOrElse(0) > 21) p.copy(splitStatus = Some(Player.Status.Bust))
+        else p
       case _ => throw new IllegalArgumentException("Player does not have a split hand")
     }
   }

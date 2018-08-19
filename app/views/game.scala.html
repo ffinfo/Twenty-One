@@ -30,11 +30,15 @@
     <table>
         <tr><th>Name</th><th>Bet</th><th>Points</th><th>Actions</th><th>Cards</th>
         @if(game.state == Game.State.Done) {
-            <th></th>
+            <th>Status</th>
         }
         </tr>
-        <tr><td>Bank</td><td><br/></td><td>@game.bank.totalPoints</td><td><br/></td><td>
-        @for(c <- game.bank.cards) { @card(c) }
+        <tr><td>Bank</td><td><br/></td><td>@if(game.state == Game.State.Done) { @game.bank.totalPoints }</td><td><br/></td><td>
+            @if(game.state == Game.State.Done) {
+                @for(c <- game.bank.cards) { @card(c) }
+            } else {
+                @for(c <- game.bank.cards.headOption.toList) { @card(c) }
+            }
         </td>
         @if(game.state == Game.State.Done) {
             <td></td>
@@ -71,26 +75,34 @@
                     <input type="submit" value="split">
                 </form>
                 }
-                @if(player.splitStatus == Some(Player.Status.Playing)) {
-                <form action="/splitHit">
-                    <input type="hidden", name="gameId" value="@gameId">
-                    <input type="hidden" name="playerId" value="@{id}">
-                    <input type="submit" value="splitHit">
-                </form>
-                <form action="/splitHold">
-                    <input type="hidden", name="gameId" value="@gameId">
-                    <input type="hidden" name="playerId" value="@{id}">
-                    <input type="submit" value="splitHold">
-                </form>
-                }
             }
         </td><td>@for(c <- player.cards) { @card(c) }</td>
         <td>
-        @if(game.state == Game.State.Done) {
-            @game.result(id)
-        }
+        @if(game.state == Game.State.Done) { @game.result(id) }
         </td>
         </tr>
+          @player.splitCards match {
+              case Some(sCards) => {
+                  <tr>
+                      <td>@player.name<br/><b>Split hand</b></td><td></td><td>@player.totalSplitPoints.getOrElse(0)</td><td>
+                  @if(player.splitStatus == Some(Player.Status.Playing)) {
+                      <form action="/splitHit">
+                          <input type="hidden", name="gameId" value="@gameId">
+                          <input type="hidden" name="playerId" value="@{id}">
+                          <input type="submit" value="splitHit">
+                      </form>
+                      <form action="/splitHold">
+                          <input type="hidden", name="gameId" value="@gameId">
+                          <input type="hidden" name="playerId" value="@{id}">
+                          <input type="submit" value="splitHold">
+                      </form>
+                  }
+                  </td>
+                      <td>@for(c <- player.splitCards.toList.flatten) { @card(c) }</td>
+                  </tr>
+              }
+              case _ => {}
+          }
         }
     }
     </table>
