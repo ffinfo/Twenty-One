@@ -1,4 +1,4 @@
-name := "Twenty-One"
+name := "TwentyOne"
  
 version := "1.0" 
       

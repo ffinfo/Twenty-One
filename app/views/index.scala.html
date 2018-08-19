@@ -1,9 +1,14 @@
 @import twentyone.utils.Game
-@(games: Map[Int, Game])
+@(games: List[Game])
 
 @main("Twenty One") {
 
     <h1>Twenty One</h1>
+
+    <form action="/create">
+        Player name <input type="text" name="name">
+        <input type="submit" value="Create game" required>
+    </form>
 
     <h3>Games</h3>
 
@@ -12,8 +17,19 @@
     } else {
         <table>
             <tr><th>ID</th><th>State</th><th>Players</th></tr>
-            @for((gameId, game) <- games) {
-                <td>@gameId</td><td>@game.state</td><td>@game.numberPlayers</td>
+            @for((game, gameId) <- games.zipWithIndex) {
+                <tr>
+                    <td><a href="/game/@gameId">@gameId</a></td>
+                    <td>@game.state</td>
+                    <td>@game.numberPlayers</td>
+                    @if(game.state == Game.State.OpenToJoin) {
+                        <form action="/join">
+                            <input type="hidden", name="gameId", value="@gameId">
+                            <td>Name <input type="text" name="name" required></td>
+                            <td><input type="submit" value="Join game"></td>
+                        </form>
+                    }
+                </tr>
             }
         </table>
     }

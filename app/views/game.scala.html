@@ -1,9 +1,95 @@
 @import twentyone.utils.Game
-@(game: Game)
+@import twentyone.utils.Player
+@(game: Game, gameId: Int, playerId: Option[Int], playerTurn: Option[Int])
 
 @main("Twenty One") {
 
+    <a href="/">Home</a>
     <h1>Twenty One</h1>
+    <table>
+        <tr><th>State</th></tr>
+        <tr>
+            <td>@game.state</td>
+            @if(game.state == Game.State.OpenToJoin) {
+                <td><form action="/start">
+                    <input type="hidden", name="gameId", value="@gameId">
+                    @playerId match {
+                        case Some(id) => {
+                            <input type="hidden" name="playerId", value="@{playerId}">
+                        }
+                        case _ => {}
+                    }
+                    <input type="submit" value="Start game">
+                </form></td>
+        }
+        </tr>
+    </table>
 
+    <br>
 
+    <table>
+        <tr><th>Name</th><th>Bet</th><th>Points</th><th>Actions<th><th>Cards</th>
+        @if(game.state == Game.State.Done) {
+            <th></th>
+        }
+        </tr>
+        <tr><td>Bank</td><td></td><td>@game.bank.totalPoints</td><td></td><td>@game.bank.cards</td>
+        @if(game.state == Game.State.Done) {
+            <td></td>
+        }
+        </tr>
+    @for(id <- 0 until game.numberPlayers) {
+        @defining(game.getPlayer(id)) { player: Player =>
+            <tr><td>@player.name</td><td>@player.bet.getOrElse("-")</td><td>@player.totalPoints</td><td>
+            @if(game.state == Game.State.Betting && player.bet.isEmpty) {
+                <form action="/bet">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="text" name="bet">
+                    <input type="submit" value="Bet">
+                </form>
+            }
+            @if(game.state == Game.State.Playing && game.playerTurn == Some(id)) {
+                @if(player.status == Player.Status.Playing) {
+                <form action="/hit">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="submit" value="Hit">
+                </form>
+                <form action="/hold">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="submit" value="Hold">
+                </form>
+                }
+                @if(player.canSplit) {
+                <form action="/split">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="submit" value="split">
+                </form>
+                }
+                @if(player.splitStatus == Some(Player.Status.Playing)) {
+                <form action="/splitHit">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="submit" value="splitHit">
+                </form>
+                <form action="/splitHold">
+                    <input type="hidden", name="gameId" value="@gameId">
+                    <input type="hidden" name="playerId" value="@{id}">
+                    <input type="submit" value="splitHold">
+                </form>
+                }
+            }
+        </td><td>@player.cards</td>
+        <td>
+        @if(game.state == Game.State.Done) {
+            @game.result(id)
+        }
+        </td>
+        </tr>
+        }
+    }
+    </table>
 }

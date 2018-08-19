@@ -4,11 +4,22 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-GET     /game/$game<[0-9]+>                 controllers.HomeController.game(game: Int)
+GET     /                                           controllers.HomeController.index
+GET     /game/$game<[0-9]+>                         controllers.HomeController.game(game: Int)
 GET     /game/$game<[0-9]+>/player/$player<[0-9]+>  controllers.HomeController.player(game: Int, player: Int)
+GET     /create                                     controllers.HomeController.createGame(name: String)
+GET     /join                                       controllers.HomeController.joinGame(gameId: Int, name: String)
+GET     /start                                      controllers.HomeController.startGame(gameId: Int, playerId: Option[Int])
+GET     /bet                                        controllers.HomeController.bet(gameId: Int, playerId: Int, bet: Int)
+
+GET     /hit                                        controllers.HomeController.hit(gameId: Int, playerId: Int)
+GET     /hold                                       controllers.HomeController.hold(gameId: Int, playerId: Int)
+GET     /split                                      controllers.HomeController.split(gameId: Int, playerId: Int)
+GET     /splitHit                                   controllers.HomeController.splitHit(gameId: Int, playerId: Int)
+GET     /splitHold                                  controllers.HomeController.splitHold(gameId: Int, playerId: Int)
+
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /swagger.json           controllers.ApiHelpController.getResources
+GET     /swagger.json                               controllers.ApiHelpController.getResources
