@@ -9,7 +9,8 @@
 - Sbt 1.0.4+
 
 ### Start development webserver
-`sbt run`
+- `sbt run`
+- Webserver run by default on [http://localhost:9000](http://localhost:9000)
 
 ### Run tests
 `sbt clean test`
