@@ -90,7 +90,13 @@
           @player.splitCards match {
               case Some(sCards) => {
                   <tr>
-                      <td>@player.name<br/><b>Split hand</b></td><td></td><td>@player.totalSplitPoints.getOrElse(0)</td><td>
+                      <td>@player.name<br/><b>Split hand</b></td><td></td><td>
+                      @if(player.totalSplitPoints.getOrElse(0) > 21) {
+                      <span style="color: red; ">@player.totalSplitPoints.getOrElse(0)</span>
+                      } else {
+                          @player.totalSplitPoints.getOrElse(0)
+                      }
+                      </td><td>
                   @if(player.splitStatus == Some(Player.Status.Playing)) {
                       <form action="/splitHit">
                           <input type="hidden", name="gameId" value="@gameId">

@@ -185,12 +185,13 @@ class Game(totalDeck: List[Card], shuffle: Boolean = true) {
     require(state == Game.State.Done, "Game is not yet done")
     val bankTotal = bank.totalPoints
     players.zipWithIndex.map { case (player, id) =>
-      if (player.status == Player.Status.Bust && player.splitStatus.forall(_ == Player.Status.Bust))
-        id -> Game.Result.Lose
-      else if (bank.status == Player.Status.Bust) id -> Game.Result.Win
-      else if (bankTotal >= player.totalPoints && bankTotal >= player.totalSplitPoints.getOrElse(0))
-        id -> Game.Result.Lose
-      else id -> Game.Result.Win
+      (bank.status, player.status, player.splitStatus) match {
+        case (Player.Status.Bust, Player.Status.Hold, _) => id -> Game.Result.Win
+        case (Player.Status.Bust, _, Some(Player.Status.Hold)) => id -> Game.Result.Win
+        case (_, Player.Status.Hold, _) if player.totalPoints > bank.totalPoints => id -> Game.Result.Win
+        case (_, _, Some(Player.Status.Hold)) if player.totalSplitPoints.getOrElse(0) > bank.totalPoints => id -> Game.Result.Win
+        case _ => id -> Game.Result.Lose
+      }
     }.toMap
   }
 
