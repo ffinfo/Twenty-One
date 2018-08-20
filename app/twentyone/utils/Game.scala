@@ -26,12 +26,13 @@ class Game(totalDeck: List[Card], shuffle: Boolean = true) {
     * Adds a player to the game
     * @throws IllegalArgumentException If action is not allowed
     * @param name Player name
-    * @return PlayerId
+    * @return PlayerIdx
     */
   def addPlayer(name: String): Int = {
     require(state == Game.State.OpenToJoin, "Game of not open to join anymore")
     require(players.size < 3, "Game is already full")
     players += Player(name).addCard(deck.next())
+    if (players.size == 3) _state = Game.State.Betting
     players.size - 1
   }
 
