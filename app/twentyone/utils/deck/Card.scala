@@ -22,6 +22,7 @@ case class Card(suit: CardSuit.Value, number: CardNumber.Value) {
     case CardNumber.King => 3
   }
 
+  /** Returns file name of the svg image */
   def imgFileName: String = {
     val suitName = suit match {
       case CardSuit.Spade => "spades"

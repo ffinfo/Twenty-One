@@ -11,13 +11,40 @@
     <head>
         @* Here's where we render the page title `String`. *@
         <title>@title</title>
-        @*<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">*@
+
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/bootstrap.min.css")">
+
+        @*<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/mbootstrap.min.css")">*@
         @*<link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">*@
         @*<script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>*@
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="@routes.Assets.versioned("css/bootstrap.min.js")" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/starter-template.css")">
+
     </head>
     <body>
-        @* And here's where we render the `Html` object containing
-         * the page content. *@
-        @content
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="/">Twenty One</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <form class="form-inline my-2 my-lg-0" action="/create">
+                    <input class="form-control mr-sm-2" name="name" type="text" placeholder="Playername">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Create Game</button>
+                </form>
+            </div>
+        </nav>
+
+        <main role="main" class="container">
+
+            <div class="starter-template">
+                @content
+            </div>
+
+        </main><!-- /.container -->
     </body>
 </html>

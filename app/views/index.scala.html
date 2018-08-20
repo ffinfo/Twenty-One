@@ -5,17 +5,12 @@
 
     <h1>Twenty One</h1>
 
-    <form action="/create">
-        Player name <input type="text" name="name">
-        <input type="submit" value="Create game" required>
-    </form>
-
     <h3>Games</h3>
 
     @if(games.isEmpty) {
         <b>No game yet</b>
     } else {
-        <table>
+        <table class="table">
             <tr><th>ID</th><th>State</th><th>Players</th></tr>
             @for((game, gameId) <- games.zipWithIndex) {
                 <tr>
@@ -25,7 +20,7 @@
                     @if(game.state == Game.State.OpenToJoin) {
                         <form action="/join">
                             <input type="hidden", name="gameId", value="@gameId">
-                            <td>Name <input type="text" name="name" required></td>
+                            <td>Name <input type="text" id="join" name="name" required></td>
                             <td><input type="submit" value="Join game"></td>
                         </form>
                     }
