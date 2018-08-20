@@ -1,31 +1,30 @@
 package controllers
 
 import javax.inject._
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
 import twentyone.utils.Game
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  def index = Action { request =>
+  /** Landing page, show all games and what games can still be joined */
+  def index = Action {
     Ok(views.html.index(HomeController.games.toList))
   }
 
-  def game(gameId: Int) = Action { request =>
+  /** Showing a game without binding it to a player */
+  def game(gameId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) => Ok(views.html.game(game, gameId, None, game.playerTurn))
       case _ => NotFound("Game does not exists")
     }
   }
 
-  def player(gameId: Int, playerId: Int) = Action { request =>
+  /** Showing a game with binding it to a player */
+  def player(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
         Ok(views.html.game(game, gameId, Some(playerId), game.playerTurn))
@@ -33,7 +32,8 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
-  def createGame(playerName: String) = Action { request =>
+  /** Creates a game and redirect to that game page */
+  def createGame(playerName: String) = Action {
     require(playerName.nonEmpty, "Player can't be a empty string")
     val game = Game(1)
     game.addPlayer(playerName)
@@ -41,7 +41,8 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     Redirect(s"/game/${HomeController.games.size - 1}/player/0")
   }
 
-  def joinGame(gameId: Int, playerName: String) = Action { request =>
+  /** Joins a game and redirect to that game page */
+  def joinGame(gameId: Int, playerName: String) = Action {
     require(playerName.nonEmpty, "Player can't be a empty string")
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -51,6 +52,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Starting a game and redirect to that game page */
   def startGame(gameId: Int, playerId: Option[Int]) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -63,6 +65,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Setting a bet for a player and redirect to that game page */
   def bet(gameId: Int, playerId: Int, bet: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -72,6 +75,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Execute action hit and redirect to that game page */
   def hit(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -81,6 +85,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Execute action hold and redirect to that game page */
   def hold(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -90,6 +95,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Execute action split and redirect to that game page */
   def split(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -99,6 +105,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Execute action splitHit and redirect to that game page */
   def splitHit(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -108,6 +115,7 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
     }
   }
 
+  /** Execute action splitHold and redirect to that game page */
   def splitHold(gameId: Int, playerId: Int) = Action {
     HomeController.games.lift(gameId) match {
       case Some(game) =>
@@ -120,5 +128,6 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionC
 }
 
 object HomeController {
+  /** Storage for all games */
   private val games: ListBuffer[Game] = ListBuffer()
 }
